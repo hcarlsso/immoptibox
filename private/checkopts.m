@@ -8,8 +8,11 @@ function  opts = checkopts(fun, opts)
 % part of the package.
 
 % Get default values in vector notation
-dopts = immoptset(fun);   dfields = fieldnames(dopts);  
-nopts = length(dfields);  dvopts = zeros(1,nopts);
+dopts = immoptset(fun);   
+dfields = fieldnames(dopts);  
+nopts = length(dfields);  
+dvopts = zeros(1,nopts);
+
 for  i = 1 : nopts
   dvopts(i) = getfield(dopts,dfields{i});
 end
@@ -18,18 +21,24 @@ if  isempty(opts)  % return default values
   opts = dvopts;
   
 else  % check given options
-  if  isstruct(opts)  % convert to array
+  if isstruct(opts)  % convert to array
     vopts = zeros(1,nopts);
     fields = fieldnames(opts);  
     for  i = 1 : length(fields)
-      fnd = 0;  j = 0;
+      fnd = 0;  
+      j = 0;
       while  ~fnd && j < length(dfields)
-        j = j + 1;  fnd =  strcmpi(dfields{j},fields{i});
+        j = j + 1;  
+        fnd =  strcmpi(dfields{j},fields{i});
       end
-      if  fnd,  vopts(j) = opts.(fields{i}); end
+      if  fnd
+        vopts(j) = opts.(fields{i}); 
+      end
     end
-  else,  vopts = opts; end
-  
+  else
+    vopts = opts; 
+  end
+
   if  strcmpi('linesearch', fun)  % special treatment
     if  vopts(1) == 0  % exact line search
       dvopts = [0 1e-3 1e-3 10 10];
